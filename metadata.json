@@ -1,0 +1,7 @@
+{
+  "name": "Snowflake CoCo Copilot - Risk, Fraud & Regulatory Intelligence",
+  "description": "Enterprise AI Copilot for Banking & NBFC Risk, Fraud detection, and Regulatory Audit compliance built with Snowflake CoCo CLI agentic workflows.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

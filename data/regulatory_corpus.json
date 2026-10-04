@@ -1,0 +1,46 @@
+[
+  {
+    "doc_id": "RBI-MD-KYC-2016-REV2024",
+    "authority": "Reserve Bank of India",
+    "title": "Master Direction - Know Your Customer (KYC) Direction, 2016",
+    "category": "AML_CFT_MONITORING",
+    "sections": [
+      {
+        "section_id": "SEC-38",
+        "title": "Monitoring of Transactions and Suspicious Activity",
+        "text": "Regulated Entities shall pay special attention to all complex, unusually large transactions and all unusual patterns of transactions which have no apparent economic or visible lawful purpose. When structuring or smurfing below INR 10,00,000 threshold is detected across related accounts within 30 days, STR must be filed with FIU-IND."
+      },
+      {
+        "section_id": "SEC-42",
+        "title": "Wire Transfers and Beneficial Ownership Verification",
+        "text": "Cross-border transfers exceeding USD 1,000 equivalent must carry complete originator identifier, National ID / LEI, and verified ultimate beneficial owner credentials. High-risk offshore jurisdictions mandate enhanced due diligence (EDD)."
+      }
+    ]
+  },
+  {
+    "doc_id": "BCBS-BASEL-III-LCR",
+    "authority": "Basel Committee on Banking Supervision",
+    "title": "Basel III: The Liquidity Coverage Ratio and Net Stable Funding Ratio",
+    "category": "PRUDENTIAL_LIQUIDITY",
+    "sections": [
+      {
+        "section_id": "PARA-41",
+        "title": "Minimum Liquidity Coverage Ratio Standard",
+        "text": "The Liquidity Coverage Ratio requires institutions to hold a minimum ratio of 100% of High-Quality Liquid Assets (HQLA) relative to total net cash outflows over a 30 calendar day stress period. A breach below 100% warrants immediate notification to host and home banking supervisory authorities."
+      }
+    ]
+  },
+  {
+    "doc_id": "RBI-SBR-NBFC-2024",
+    "authority": "Reserve Bank of India",
+    "title": "Scale Based Regulation for Non-Banking Financial Companies (NBFC)",
+    "category": "NBFC_PRUDENTIAL",
+    "sections": [
+      {
+        "section_id": "SBR-SEC-12",
+        "title": "Capital Adequacy and Exposure Ceilings",
+        "text": "Middle and Upper Layer NBFCs must maintain minimum CRAR of 15% with Tier 1 capital >= 10%. Single group lending exposure is strictly capped at 25% of eligible capital base."
+      }
+    ]
+  }
+]

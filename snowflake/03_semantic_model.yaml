@@ -1,0 +1,168 @@
+# Snowflake Governed Semantic Model Configuration
+# Project: Risk, Fraud, and Regulatory Intelligence Copilot
+# Compatible with: Snowflake Cortex Analyst & CoCo Semantic Model Orchestration
+
+name: banking_risk_regulatory_semantic_model
+description: >
+  Governed semantic layer uniting transactional behavior, AML forensic alerts,
+  and prudential regulatory capital & liquidity ratios (Basel III / RBI / CBUAE)
+  for natural language querying by bank compliance and audit teams.
+
+tables:
+  - name: accounts
+    base_table:
+      database: BANKING_RISK_DB
+      schema: CORE_COMPLIANCE
+      table: ACCOUNTS
+    description: Core enterprise banking entity accounts and customer KYC risk profiles.
+    dimensions:
+      - name: account_id
+        type: VARCHAR
+        description: Unique banking account identifier (e.g. ACC-8921-CORP)
+        synonyms: ["account number", "account", "customer id"]
+      - name: entity_name
+        type: VARCHAR
+        description: Registered commercial or corporate legal entity name
+        synonyms: ["company name", "client name", "account holder"]
+      - name: risk_tier
+        type: VARCHAR
+        description: Risk tier assigned during KYC/AML onboarding (LOW, MEDIUM, HIGH, CRITICAL)
+        synonyms: ["risk level", "risk rating", "AML tier"]
+      - name: jurisdiction
+        type: VARCHAR
+        description: Two-letter ISO country code of entity registration
+        synonyms: ["country", "jurisdiction", "domicile"]
+      - name: kyc_status
+        type: VARCHAR
+        description: Compliance verification standing (VERIFIED, FLAGGED_FOR_RE_KYC)
+    measures:
+      - name: current_balance
+        type: NUMBER
+        aggregation: SUM
+        description: Real-time ledger balance held in account
+        synonyms: ["balance", "funds on deposit"]
+
+  - name: transactions
+    base_table:
+      database: BANKING_RISK_DB
+      schema: CORE_COMPLIANCE
+      table: TRANSACTIONS
+    description: Individual transactional activity log ingested via dynamic streams.
+    dimensions:
+      - name: transaction_id
+        type: VARCHAR
+        description: Unique payment reference string
+      - name: channel
+        type: VARCHAR
+        description: Payment rail utilized (RTGS, NEFT, SWIFT, UPI_CORPORATE, ACH)
+        synonyms: ["payment rail", "network", "transfer method"]
+      - name: direction
+        type: VARCHAR
+        description: Direction of capital movement (INBOUND or OUTBOUND)
+      - name: destination_country
+        type: VARCHAR
+        description: Counterparty destination jurisdiction
+    measures:
+      - name: transaction_amount
+        expr: amount
+        type: NUMBER
+        aggregation: SUM
+        description: Cumulative sum of transaction amounts in USD
+        synonyms: ["volume", "total flow", "turnover"]
+      - name: transaction_count
+        expr: count(transaction_id)
+        type: NUMBER
+        aggregation: COUNT
+        description: Total count of processed transactions
+
+  - name: flagged_aml_events
+    base_table:
+      database: BANKING_RISK_DB
+      schema: CORE_COMPLIANCE
+      table: FLAGGED_AML_EVENTS
+    description: Forensic AML rules engine and machine-learning anomaly detections.
+    dimensions:
+      - name: alert_id
+        type: VARCHAR
+        description: Investigation alert identifier (e.g. AML-5012)
+      - name: severity_level
+        type: VARCHAR
+        description: Alert priority (CRITICAL, HIGH, MEDIUM, LOW)
+        synonyms: ["severity", "urgency", "alert tier"]
+      - name: pattern_tags
+        type: VARCHAR
+        description: Typology tag (e.g., STRUCTURING_SMURFING, VELOCITY_VOLUME_SPIKE)
+        synonyms: ["fraud pattern", "AML typology", "anomaly reason"]
+      - name: investigation_status
+        type: VARCHAR
+        description: Workflow status (OPEN, TRIAGED, ESCALATED_SAR, CLOSED)
+    measures:
+      - name: fraud_risk_score
+        expr: avg(anomaly_score)
+        type: NUMBER
+        aggregation: AVG
+        description: Average forensic anomaly confidence score (0.0 to 1.0)
+        synonyms: ["fraud score", "anomaly confidence", "risk probability"]
+      - name: flagged_alert_count
+        expr: count(alert_id)
+        type: NUMBER
+        aggregation: COUNT
+        description: Total number of active AML alerts
+
+  - name: credit_risk_metrics
+    base_table:
+      database: BANKING_RISK_DB
+      schema: CORE_COMPLIANCE
+      table: CREDIT_RISK_METRICS
+    description: Basel III liquidity ratios and RBI NBFC prudential limits.
+    dimensions:
+      - name: primary_regulator
+        type: VARCHAR
+        description: Primary regulatory supervisor (RBI, BCBS, CBUAE)
+      - name: regulatory_breach_flag
+        type: BOOLEAN
+        description: Boolean indicating whether entity breaches statutory minimums
+    measures:
+      - name: liquidity_coverage_ratio
+        expr: avg(liquidity_coverage_ratio_pct)
+        type: NUMBER
+        aggregation: AVG
+        description: Basel III Liquidity Coverage Ratio (LCR) - statutory minimum 100%
+        synonyms: ["LCR", "liquidity ratio", "30-day buffer"]
+      - name: net_stable_funding_ratio
+        expr: avg(net_stable_funding_ratio_pct)
+        type: NUMBER
+        aggregation: AVG
+        description: Basel III Net Stable Funding Ratio (NSFR) - statutory minimum 100%
+        synonyms: ["NSFR", "structural liquidity"]
+      - name: capital_adequacy_ratio
+        expr: avg(capital_adequacy_ratio_crar_pct)
+        type: NUMBER
+        aggregation: AVG
+        description: Capital to Risk Weighted Assets Ratio (CRAR) - NBFC minimum 15%
+        synonyms: ["CRAR", "capital adequacy", "solvency ratio"]
+
+relationships:
+  - name: account_to_transactions
+    join_type: one_to_many
+    left_table: accounts
+    right_table: transactions
+    relationship_keys:
+      - left_column: account_id
+        right_column: account_id
+
+  - name: account_to_aml_alerts
+    join_type: one_to_many
+    left_table: accounts
+    right_table: flagged_aml_events
+    relationship_keys:
+      - left_column: account_id
+        right_column: account_id
+
+  - name: account_to_credit_metrics
+    join_type: one_to_one
+    left_table: accounts
+    right_table: credit_risk_metrics
+    relationship_keys:
+      - left_column: account_id
+        right_column: account_id

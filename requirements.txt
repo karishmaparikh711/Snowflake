@@ -1,0 +1,14 @@
+# Snowflake CoCo CLI Hackathon: Risk, Fraud, and Regulatory Intelligence Copilot
+# Dependencies for Streamlit Application, Snowpark, and CoCo Agentic Skills
+
+streamlit>=1.35.0
+pandas>=2.0.0
+snowflake-snowpark-python>=1.15.0
+snowflake-connector-python>=3.8.0
+pyyaml>=6.0.1
+pydantic>=2.7.0
+pytest>=8.0.0
+requests>=2.31.0
+python-dotenv>=1.0.1
+altair>=5.3.0
+mcp>=1.0.0

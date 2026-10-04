@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "jira-compliance": {
+      "command": "python",
+      "args": ["-m", "mcp_server_jira"],
+      "env": {
+        "JIRA_URL": "https://enterprise-bank.atlassian.net",
+        "JIRA_PROJECT_KEY": "COMP",
+        "JIRA_ISSUE_TYPE": "Compliance Investigation"
+      },
+      "capabilities": [
+        "create_sar_ticket",
+        "update_investigation_status",
+        "attach_audit_dossier"
+      ]
+    },
+    "slack-risk-alerts": {
+      "command": "python",
+      "args": ["-m", "mcp_server_slack"],
+      "env": {
+        "SLACK_CHANNEL": "#risk-triage-officers",
+        "SLACK_ALERT_LEVEL": "HIGH_SEVERITY_ONLY"
+      },
+      "capabilities": [
+        "broadcast_aml_alert",
+        "post_daily_risk_summary",
+        "request_human_approval"
+      ]
+    },
+    "snowflake-cortex-mcp": {
+      "command": "python",
+      "args": ["-m", "mcp_server_snowflake_cortex"],
+      "env": {
+        "SNOWFLAKE_DATABASE": "BANKING_RISK_DB",
+        "SNOWFLAKE_SCHEMA": "CORE_COMPLIANCE"
+      },
+      "capabilities": [
+        "cortex_analyst_text_to_sql",
+        "cortex_search_vectors",
+        "execute_governed_query"
+      ]
+    }
+  }
+}

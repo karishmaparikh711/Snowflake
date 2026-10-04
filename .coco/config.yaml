@@ -1,0 +1,68 @@
+# Snowflake CoCo CLI Configuration
+# Project: Risk, Fraud, and Regulatory Intelligence Copilot
+# Hackathon: Snowflake CoCo CLI Hackathon (GCC Region)
+# Target: Banking & NBFC Compliance, Risk, and Audit Teams
+
+version: "1.0"
+project:
+  name: "risk-fraud-regulatory-copilot"
+  description: "Enterprise Copilot for Banking & NBFC Risk, Fraud detection, and Regulatory Audit compliance"
+  organization: "Global Compliance & Risk Engineering"
+  environment: "production"
+
+snowflake:
+  account: "${SNOWFLAKE_ACCOUNT}"
+  user: "${SNOWFLAKE_USER}"
+  role: "COMPLIANCE_OFFICER_ROLE"
+  warehouse: "COMPLIANCE_WH"
+  database: "BANKING_RISK_DB"
+  schema: "CORE_COMPLIANCE"
+  cortex_search_service: "REGULATORY_DOCS_SEARCH_SERVICE"
+  default_llm_model: "snowflake-arctic"
+
+coco_cli:
+  lifecycle_phases:
+    planning:
+      enabled: true
+      schema_discovery: true
+      ontology_modeling: true
+      orchestration: "airflow_snowflake_tasks"
+    development:
+      enabled: true
+      semantic_model_sync: true
+      dynamic_tables_auto_refresh: true
+      scaffold_skills: true
+    execution:
+      enabled: true
+      telemetry: "snowflake_event_tables"
+      stream_monitoring: true
+    testing_and_validation:
+      enabled: true
+      guardrails_enforced: true
+      min_confidence_threshold: 0.85
+      pii_scrubbing: true
+      sql_injection_defense: true
+
+semantic_layer:
+  model_file: "snowflake/03_semantic_model.yaml"
+  metrics:
+    - fraud_risk_score
+    - total_flagged_amount
+    - liquidity_coverage_ratio
+    - net_stable_funding_ratio
+    - anomalous_velocity_count
+
+agent_skills:
+  - name: "fraud_signal_detector"
+    entrypoint: ".coco/skills/fraud_detector.py"
+    description: "Detects rapid velocity spikes, smurfing, and AML high-risk entity patterns"
+  - name: "regulatory_evidence_retriever"
+    entrypoint: ".coco/skills/regulatory_rag.py"
+    description: "Cortex Vector Search over RBI Master Directions, Basel III, and FATF guidelines"
+  - name: "audit_report_generator"
+    entrypoint: ".coco/skills/audit_reporter.py"
+    description: "Compiles cited audit-ready compliance dossiers and Suspicious Activity Reports (SAR)"
+
+mcp:
+  config_file: ".coco/mcp_servers.json"
+  auto_connect: true
